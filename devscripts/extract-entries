@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use utf8;
+use warnings;
+
+use File::Slurper qw(read_text);
+
+binmode STDOUT, ":utf8";
+
+my @w;
+my %mem;
+
+for my $file (<../devdata/*.php*>) {
+    my $ct = read_text($file, 'latin1');
+
+    while ($ct =~ m!<td><strong>(.+?)</strong>!gm) {
+        next if $mem{$1}++;
+        push @w, $1;
+    }
+}
+
+say for sort @w;
